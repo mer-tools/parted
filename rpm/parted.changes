@@ -1,0 +1,11 @@
+* Tue May 16 2017 Martin Kampas <martin.kampas@jolla.com> - 3.0-2
+- Add patch for gets() removed in C11. Contribute to JB#36213
+
+* Mon Jun 06 2011 Anas Nashif <anas.nashif@intel.com> - 3.0
+- update to 3.0
+
+* Wed Dec 02 2009 Vivian Zhang <vivian.zhang@intel.com> - 1.9.0
+- Merged 9 new upstream patches and dropped 2 old ones
+
+* Sat Aug 22 2009 Anas Nashif <anas.nashif@intel.com> - 1.9.0
+- Update to 1.9.0
