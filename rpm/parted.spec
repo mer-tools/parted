@@ -117,4 +117,5 @@ fi
 %files doc
 %defattr(-,root,root,-)
 %{_infodir}/%{name}.*
-%{_mandir}/man*/%{name}.*
+%{_mandir}/man8/%{name}.*
+%{_mandir}/man8/partprobe.*
