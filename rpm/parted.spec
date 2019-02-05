@@ -22,8 +22,6 @@ BuildRequires: texinfo
 BuildRequires: gperf
 
 Requires(post): /sbin/ldconfig
-Requires(post): /sbin/install-info
-Requires(preun): /sbin/install-info
 Requires(postun): /sbin/ldconfig
 
 %description
@@ -43,6 +41,17 @@ The GNU Parted library is a set of routines for hard disk partition
 manipulation. If you want to develop programs that manipulate disk
 partitions and filesystems using the routines provided by the GNU
 Parted library, you need to install this package.
+
+%package doc
+Summary:   Documentation for %{name}
+Group:     Documentation
+Requires:  %{name} = %{version}-%{release}
+Requires(post): /sbin/install-info
+Requires(postun): /sbin/install-info
+Obsoletes: %{name}-docs
+
+%description doc
+Man and info pages for %{name}.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -79,14 +88,22 @@ touch ChangeLog
 
 %postun -p /sbin/ldconfig
 
+%post doc
+if [ -f %{_infodir}/%{name}.info.gz ]; then
+    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+fi
+
+%preun doc
+if [ $1 = 0 -a -f %{_infodir}/%{name}.info.gz ]; then
+   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
+fi
+
 # TODO: .po files are not included in the Git repo
 #%%lang_package
 
-%docs_package
-
 %files 
 %defattr(-,root,root,-)
-%doc COPYING
+%license COPYING
 %{_sbindir}/parted
 %{_sbindir}/partprobe
 %{_libdir}/libparted*.so.*
@@ -96,3 +113,8 @@ touch ChangeLog
 %{_includedir}/parted
 %{_libdir}/libparted.so
 %{_libdir}/pkgconfig/libparted.pc
+
+%files doc
+%defattr(-,root,root,-)
+%{_infodir}/%{name}.*
+%{_mandir}/man*/%{name}.*
