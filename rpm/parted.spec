@@ -8,9 +8,9 @@ Version: 0
 Release: 1
 License: GPLv3+
 Group:   Applications/System
-URL:     http://www.gnu.org/software/parted
+URL:     https://github.com/mer-tools/parted
 
-Source0: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
+Source0: %{name}-%{version}.tar.gz
 
 BuildRequires: e2fsprogs-devel
 BuildRequires: libuuid-devel
