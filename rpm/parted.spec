@@ -7,7 +7,6 @@ Name:    parted
 Version: 0
 Release: 1
 License: GPLv3+
-Group:   Applications/System
 URL:     https://github.com/mer-tools/parted
 
 Source0: %{name}-%{version}.tar.gz
@@ -32,7 +31,6 @@ to new hard disks.
 
 %package devel
 Summary:  Files for developing apps which will manipulate disk partitions
-Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -44,7 +42,6 @@ Parted library, you need to install this package.
 
 %package doc
 Summary:   Documentation for %{name}
-Group:     Documentation
 Requires:  %{name} = %{version}-%{release}
 Requires(post): /sbin/install-info
 Requires(postun): /sbin/install-info
