@@ -1,24 +1,24 @@
 #specfile originally created for Fedora, modified for Moblin Linux
-%define _sbindir /sbin
-#define _libdir /%{_lib}
 
 Summary: The GNU disk partition manipulation program
 Name:    parted
-Version: 0
+Version: 3.6
 Release: 1
 License: GPLv3+
 URL:     https://github.com/mer-tools/parted
-
 Source0: %{name}-%{version}.tar.gz
 
+BuildRequires: bc
 BuildRequires: e2fsprogs-devel
-BuildRequires: libuuid-devel
-BuildRequires: readline-devel
-BuildRequires: ncurses-devel
-BuildRequires: libtool
 BuildRequires: gettext-devel
-BuildRequires: texinfo
+BuildRequires: git
 BuildRequires: gperf
+BuildRequires: libtool
+BuildRequires: pkgconfig(ncurses)
+BuildRequires: pkgconfig(readline)
+BuildRequires: pkgconfig(uuid)
+BuildRequires: rsync
+BuildRequires: texinfo
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -43,76 +43,42 @@ Parted library, you need to install this package.
 %package doc
 Summary:   Documentation for %{name}
 Requires:  %{name} = %{version}-%{release}
-Requires(post): /sbin/install-info
-Requires(postun): /sbin/install-info
-Obsoletes: %{name}-docs
 
 %description doc
-Man and info pages for %{name}.
+Man pages for %{name}.
 
 %prep
-%setup -q -n %{name}-%{version}
-
-# Build fix - 'gets' is removed in C11
-# Chose this over committing this change to Git because gnulib/ is a Git submodule
-sed -i '/^_GL_WARN_ON_USE (gets,/s;^;//;' gnulib/lib/stdio.in.h
-
-# This is normally generated from Git history. Cannot be done on OBS.
-touch ChangeLog
+%autosetup -n %{name}-%{version}/%{name}
 
 ./bootstrap --skip-po --no-git --gnulib-srcdir=gnulib
 
 %build
-%configure --disable-static --disable-device-mapper --with-readline --with-libdir=%{_libdir} --exec-prefix=/usr
-%{__make} %{?_smp_mflags}
+%configure --disable-static --disable-device-mapper --with-readline --with-libdir=%{_libdir} --exec-prefix=%{_prefix}
+%make_build
 
 %install
-%{__rm} -rf %{buildroot}
 %make_install
 
 # Remove components we do not ship
-%{__rm} -rf %{buildroot}%{_infodir}/dir
-#%{__rm} -rf %{buildroot}%{_bindir}/label
-#%{__rm} -rf %{buildroot}%{_bindir}/disk
-
-# TODO: .po files are not included in the Git repo
-#%%find_lang %{name}
-
-%clean
-%{__rm} -rf %{buildroot}
+%{__rm} -rf %{buildroot}%{_infodir}
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-%post doc
-if [ -f %{_infodir}/%{name}.info.gz ]; then
-    /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
-
-%preun doc
-if [ $1 = 0 -a -f %{_infodir}/%{name}.info.gz ]; then
-   /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
-fi
-
-# TODO: .po files are not included in the Git repo
-#%%lang_package
-
-%files 
-%defattr(-,root,root,-)
+%files
 %license COPYING
 %{_sbindir}/parted
 %{_sbindir}/partprobe
 %{_libdir}/libparted*.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/parted
 %{_libdir}/libparted.so
+%{_libdir}/libparted-fs-resize.so
 %{_libdir}/pkgconfig/libparted.pc
+%{_libdir}/pkgconfig/libparted-fs-resize.pc
 
 %files doc
-%defattr(-,root,root,-)
-%{_infodir}/%{name}.*
 %{_mandir}/man8/%{name}.*
 %{_mandir}/man8/partprobe.*
