@@ -1,4 +1,4 @@
-#specfile originally created for Fedora, modified for Moblin Linux
+# Original specfile from Fedora
 
 Summary: The GNU disk partition manipulation program
 Name:    parted
@@ -7,17 +7,15 @@ Release: 1
 License: GPLv3+
 URL:     https://github.com/mer-tools/parted
 Source0: %{name}-%{version}.tar.gz
+Patch1:  0001-Remove-extra-buildreq.patch
 
-BuildRequires: bc
 BuildRequires: e2fsprogs-devel
 BuildRequires: gettext-devel
-BuildRequires: git
 BuildRequires: gperf
 BuildRequires: libtool
 BuildRequires: pkgconfig(ncurses)
 BuildRequires: pkgconfig(readline)
 BuildRequires: pkgconfig(uuid)
-BuildRequires: rsync
 BuildRequires: texinfo
 
 Requires(post): /sbin/ldconfig
@@ -50,9 +48,8 @@ Man pages for %{name}.
 %prep
 %autosetup -n %{name}-%{version}/%{name}
 
-./bootstrap --skip-po --no-git --gnulib-srcdir=gnulib
-
 %build
+./bootstrap --skip-po --no-git --gnulib-srcdir=gnulib
 %configure --disable-static --disable-device-mapper --with-readline --with-libdir=%{_libdir} --exec-prefix=%{_prefix}
 %make_build
 
