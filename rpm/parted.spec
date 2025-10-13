@@ -8,6 +8,7 @@ License: GPLv3+
 URL:     https://github.com/mer-tools/parted
 Source0: %{name}-%{version}.tar.gz
 Patch1:  0001-Remove-extra-buildreq.patch
+Patch2:  0002-Fix-do_version-declaration.patch
 
 BuildRequires: e2fsprogs-devel
 BuildRequires: gettext-devel
@@ -46,7 +47,7 @@ Requires:  %{name} = %{version}-%{release}
 Man pages for %{name}.
 
 %prep
-%autosetup -n %{name}-%{version}/%{name}
+%autosetup -p1 -n %{name}-%{version}/%{name}
 
 %build
 ./bootstrap --skip-po --no-git --gnulib-srcdir=gnulib
